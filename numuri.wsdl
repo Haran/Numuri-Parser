@@ -1,0 +1,65 @@
+<?xml version ='1.0' encoding ='UTF-8' ?>
+<definitions name="Numuri"
+             xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/'
+             xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+             xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'
+             xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/'
+             xmlns='http://schemas.xmlsoap.org/wsdl/'>
+
+    <message name="getNumberRequest">
+        <part name="number" type="xsd:string" />
+    </message>
+
+    <message name="getNumberResponse">
+        <part name="operator" type="xsd:string">
+            <wsdl:documentation>
+                Contains current number operator (pakalpojuma nodrošinātājs)
+            </wsdl:documentation>
+        </part>
+        <part name="belonging" type="xsd:string">
+            <wsdl:documentation>
+                Contains phone number type (Numura pielietojums)
+            </wsdl:documentation>
+        </part>
+        <part name="sourceowner" type="xsd:string">
+            <wsdl:documentation>
+                Optional param (could be empty). If not empty contains previous operator (numerācija piešķirta)
+            </wsdl:documentation>
+        </part>
+        <part name="querytime" type="xsd:float">
+            <wsdl:documentation>
+                Contains amount of seconds taken by query
+            </wsdl:documentation>
+        </part>
+    </message>
+
+    <portType name="NumberPortType">
+        <operation name="getNumber">
+            <wsdl:documentation>
+                The only avaliable request method. Send 8-digit phone number and in it's arguemnt and recieve the answer.
+            </wsdl:documentation>
+            <input message="tns:getNumberRequest" />
+            <output message="tns:getNumberResponse" />
+        </operation>
+    </portType>
+
+    <binding name="NumberBinding" type="tns:NumberPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name='getNumber'>
+            <soap:operation soapAction='urn:xmethods-delayed-quotes#getNumber'/>
+            <input>
+                <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+            </input>
+            <output>
+                <soap:body use='encoded' namespace='urn:xmethods-delayed-quotes' encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name='Numuri'>
+        <port name='NumberPort' binding='NumberBinding'>
+            <soap:address location='http://client/server.php'/>
+        </port>
+    </service>
+
+</definitions>
